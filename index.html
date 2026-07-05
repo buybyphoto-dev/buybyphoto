@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BuyByPhoto</title>
+  <meta name="description" content="Upload a photo and discover similar products from stores across the web." />
+  <style>
+    :root{
+      --bg:#f8fafc;
+      --card:rgba(255,255,255,.88);
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:rgba(15,23,42,.10);
+      --violet:#6d28d9;
+      --violet2:#8b5cf6;
+      --shadow:0 30px 80px rgba(15,23,42,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text);background:radial-gradient(circle at top,#ede9fe 0%,transparent 35%),linear-gradient(180deg,#f8fafc 0%,#ffffff 100%)}
+    a{text-decoration:none;color:inherit}
+    .wrap{max-width:1180px;margin:0 auto;padding:24px}
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;gap:16px;
+      padding:18px 22px;border:1px solid var(--line);border-radius:28px;background:var(--card);
+      box-shadow:var(--shadow);backdrop-filter:blur(12px)
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:46px;height:46px;border-radius:16px;background:linear-gradient(135deg,var(--violet),var(--violet2));
+      display:grid;place-items:center;color:#fff;font-size:22px;font-weight:700;box-shadow:0 12px 30px rgba(109,40,217,.25)
+    }
+    .brand h1{font-size:22px;margin:0;line-height:1}
+    .brand h1 span{color:var(--violet)}
+    .brand p{margin:6px 0 0;font-size:13px;color:var(--muted)}
+    .nav{display:flex;gap:24px;color:#475569;font-size:14px;flex-wrap:wrap}
+    .nav a:hover{color:var(--text)}
+    .btn{
+      border:0;cursor:pointer;padding:14px 20px;border-radius:999px;background:linear-gradient(135deg,var(--violet),var(--violet2));
+      color:#fff;font-weight:700;box-shadow:0 16px 28px rgba(109,40,217,.25)
+    }
+    .btn.secondary{background:#fff;color:var(--violet);border:1px solid rgba(109,40,217,.22);box-shadow:none}
+    .hero{margin-top:24px;display:grid;grid-template-columns:1.15fr .85fr;gap:24px}
+    .panel{
+      border:1px solid var(--line);border-radius:34px;background:var(--card);box-shadow:var(--shadow);backdrop-filter:blur(12px)
+    }
+    .hero-left{padding:38px;overflow:hidden}
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#f3e8ff;color:#7c3aed;
+      font-size:13px;font-weight:700
+    }
+    h2{margin:22px 0 0;font-size:clamp(42px,6vw,72px);line-height:.95;letter-spacing:-.05em}
+    .grad{background:linear-gradient(90deg,var(--violet),var(--violet2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lead{max-width:620px;margin:24px 0 0;font-size:18px;line-height:1.8;color:var(--muted)}
+    .upload-row{margin-top:28px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+    .dropzone{
+      border:2px dashed rgba(109,40,217,.22);border-radius:28px;padding:22px;background:rgba(109,40,217,.05);cursor:pointer
+    }
+    .dropzone strong{display:block;margin-bottom:8px}
+    .dropzone small{color:var(--muted)}
+    input[type=file]{display:none}
+    .status{margin-top:14px;color:#374151;font-size:14px}
+    .notes{margin-top:18px;display:flex;flex-wrap:wrap;gap:14px;color:#64748b;font-size:14px}
+    .notes span{display:inline-flex;align-items:center;gap:8px}
+    .grid-right{display:grid;gap:24px}
+    .best{padding:24px}
+    .best-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .best-head h3{margin:0;font-size:24px}
+    .best-head p{margin:4px 0 0;color:var(--muted)}
+    .results{margin-top:18px;display:grid;gap:12px}
+    .result{
+      display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;
+      padding:12px;border-radius:22px;border:1px solid var(--line);background:#fff
+    }
+    .thumb{
+      width:62px;height:62px;border-radius:18px;background:linear-gradient(135deg,#e5e7eb,#f9fafb);display:grid;place-items:center;color:#9ca3af;font-size:28px
+    }
+    .store{font-weight:700}
+    .price{font-weight:800;font-size:18px}
+    .meta{color:var(--muted);font-size:14px;margin-top:4px}
+    .pill{padding:9px 12px;border-radius:999px;background:#f5f3ff;color:#6d28d9;font-weight:700;font-size:13px}
+    .section{
+      margin-top:24px;padding:28px;border-radius:32px;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow);backdrop-filter:blur(12px)
+    }
+    .three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{border-radius:26px;background:#fafafa;border:1px solid rgba(15,23,42,.06);padding:20px}
+    .card h4{margin:0 0 8px;font-size:18px}
+    .card p{margin:0;color:var(--muted);line-height:1.6}
+    .footer{
+      margin-top:24px;padding:28px;border-radius:32px;background:#111827;color:#fff;
+      display:flex;justify-content:space-between;align-items:center;gap:18px
+    }
+    .footer p{color:#cbd5e1;margin:8px 0 0}
+    .preview{display:none;margin-top:14px;padding:12px;border-radius:20px;background:#fff;border:1px solid var(--line)}
+    .preview img{width:100%;max-height:220px;object-fit:cover;border-radius:16px;display:block}
+    .preview.show{display:block}
+    @media (max-width:920px){
+      .hero{grid-template-columns:1fr}
+      .three{grid-template-columns:1fr}
+      .footer,.topbar{flex-direction:column;align-items:flex-start}
+      .upload-row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">◎</div>
+        <div>
+          <h1>BuyBy<span>Photo</span></h1>
+          <p>Find it. We search it. You buy it.</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="btn">Try it now</button>
+    </header>
+
+    <main class="hero">
+      <section class="panel hero-left">
+        <div class="eyebrow">✨ Visual shopping made simple</div>
+        <h2>
+          Find it.<br />
+          We search it.<br />
+          <span class="grad">You buy it.</span>
+        </h2>
+        <p class="lead">
+          Upload a photo of a product you like, and BuyByPhoto will help you discover similar items
+          and where to buy them.
+        </p>
+
+        <div class="upload-row">
+          <label class="dropzone" for="photo">
+            <strong>Upload a photo</strong>
+            <small>JPG, PNG, or WebP</small>
+            <div class="status" id="fileName">No file selected yet.</div>
+            <input id="photo" type="file" accept="image/*" />
+            <div class="preview" id="previewWrap">
+              <img id="previewImg" alt="Uploaded preview" />
+            </div>
+          </label>
+          <button class="btn">Search by photo</button>
+        </div>
+
+        <div class="notes">
+          <span>🔒 Photo stays private</span>
+          <span>⚡ Fast product matches</span>
+          <span>🛍️ Compare store options</span>
+        </div>
+      </section>
+
+      <aside class="grid-right">
+        <section class="panel best">
+          <div class="best-head">
+            <div>
+              <p>Best matches</p>
+              <h3>Suggested stores</h3>
+            </div>
+            <div class="pill">AI results</div>
+          </div>
+
+          <div class="results">
+            <div class="result">
+              <div class="thumb">🪑</div>
+              <div>
+                <div class="store">Accent Chair</div>
+                <div class="meta">Walmart</div>
+              </div>
+              <div class="price">$199.99</div>
+            </div>
+            <div class="result">
+              <div class="thumb">🪑</div>
+              <div>
+                <div class="store">Lounge Chair</div>
+                <div class="meta">Amazon</div>
+              </div>
+              <div class="price">$189.00</div>
+            </div>
+            <div class="result">
+              <div class="thumb">🪑</div>
+              <div>
+                <div class="store">Modern Chair</div>
+                <div class="meta">Wayfair</div>
+              </div>
+              <div class="price">$215.00</div>
+            </div>
+            <div class="result">
+              <div class="thumb">🪑</div>
+              <div>
+                <div class="store">Comfy Chair</div>
+                <div class="meta">Target</div>
+              </div>
+              <div class="price">$179.99</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel best">
+          <div class="best-head">
+            <div>
+              <p>Brand value</p>
+              <h3>Why this name works</h3>
+            </div>
+          </div>
+          <p class="lead" style="font-size:16px;margin-top:14px;">
+            BuyByPhoto is clear, memorable, and ideal for a visual shopping product.
+            It instantly tells users what the app does.
+          </p>
+        </section>
+      </aside>
+    </main>
+
+    <section class="section" id="how">
+      <div class="three">
+        <div class="card">
+          <h4>1. Upload</h4>
+          <p>The user uploads a photo of a product they want to find.</p>
+        </div>
+        <div class="card">
+          <h4>2. Match</h4>
+          <p>The app finds similar products and compares sources.</p>
+        </div>
+        <div class="card">
+          <h4>3. Buy</h4>
+          <p>The user clicks through to the best place to purchase.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="three">
+        <div class="card">
+          <h4>Fast matching</h4>
+          <p>Designed for quick shopping decisions and a clean user experience.</p>
+        </div>
+        <div class="card">
+          <h4>Multi-store results</h4>
+          <p>Perfect for showing options from different retailers side by side.</p>
+        </div>
+        <div class="card">
+          <h4>Conversion focused</h4>
+          <p>Built to help visitors move from inspiration to purchase faster.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer" id="contact">
+      <div>
+        <h3 style="margin:0;">Ready to launch BuyByPhoto?</h3>
+        <p>Next step: connect this GitHub repo to Vercel and publish the site.</p>
+      </div>
+      <button class="btn secondary">Deploy the site</button>
+    </footer>
+  </div>
+
+  <script>
+    const input = document.getElementById('photo');
+    const fileName = document.getElementById('fileName');
+    const previewWrap = document.getElementById('previewWrap');
+    const previewImg = document.getElementById('previewImg');
+
+    input.addEventListener('change', () => {
+      const file = input.files && input.files[0];
+      if (!file) {
+        fileName.textContent = 'No file selected yet.';
+        previewWrap.classList.remove('show');
+        previewImg.removeAttribute('src');
+        return;
+      }
+
+      fileName.textContent = `Selected: ${file.name}`;
+      const url = URL.createObjectURL(file);
+      previewImg.src = url;
+      previewWrap.classList.add('show');
+    });
+  </script>
+</body>
+</html>
